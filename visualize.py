@@ -10,13 +10,11 @@ import pandas as pd
 from matplotlib import pyplot as plt
 from pandas.plotting import parallel_coordinates
 
-from point import Point
-
 
 class Visualize(object):
     """ Methods: plot_2d = Produce a plot of the given line and points.
-                 plot_parallel_weights = Produce a parallel plot of the two weight vectors.
-                 plot_matrix = Produce a matrix of plots given the line and points. 
+                 plot_parallel = Produce a parallel plot of the two weight vectors.
+                 plot_3d = Produce a matrix of plots given the line and points. 
     """
 
     @staticmethod
@@ -150,67 +148,60 @@ class Visualize(object):
         Visualize.plot_parallel_weights(w, w_star, show, dynamic, pause, flash_w)
 
     @staticmethod
-    def plot_matrix(d, w, w_star=None, focus=None, scale=1, show=False, dynamic=False, pause=0.01,
-                    flash_w=0):
-        """ Produce a matrix of plots given the data-set "d" and the weight vector "w". For each 
-        diagonal (where the dimensions are equal), a histogram of the data itself is displayed. If
-        defined, draw the decision boundary line from "w_star" and adjust the axis according to
+    def plot_3d(d, w, w_star=None, focus=None, scale=1, show=False, dynamic=False, pause=0.01,
+                flash_w=0):
+        """ Produce a plot given the data-set "d" and the weight vector "w". If defined, 
+        draw the decision boundary line from "w_star" and adjust the axis according to 
         "scale". If desired, the call to "plt.show() and plt.ion()" can be omitted.
-        
-        Note: I initially thought this would be cool to visualize, but it doesn't really make 
-        sense to plot the points because each plot shows data that is not linearly separable, 
-        even though they are when combined with other dimensions. Because of this, I omitted the 
-        plotting of the points themselves (which makes it boring). 
-
+    
         :param d: Data-set containing list of Point instances.
         :param w: Weight vector to derive line from.
         :param w_star: Weight vector to derive decision boundary from.
-        :param focus: Star to focus. Represents the current star selected.
+        :param focus: Point to focus. Represents the current point selected.
         :param scale: The axis to display.
         :param show: If false, do not call "plt.show()".
         :param dynamic: If false, do not call "plt.ion()".
         :param pause: Number of seconds to pause plot for.
-        :param flash_w: Used to indiciate that we have found a solution. Flashes w line.
-        :return: None.
+        :param flash_w: Used to indiciate that we have found a solution. Flashes w plane.
+        :return: -1 if the given data-set is not three-dimensional. 0 otherwise.
         """
-        degree = len(d[0].x)
+        if len(d[0].x) != 3:
+            return -1
 
         # Enable interactive mode if desired. Clear the previous plot.
-        dynamic and plt.subplot(111) and plt.cla() and plt.ion()
+        dynamic and plt.cla() and plt.ion()
 
-        # For every dimension, we plot against another.
-        for m in range(degree):
-            for n in range(degree):
-                plt.subplot(degree, degree, degree * m + n + 1)
+        # Our projection is now 3D.
+        ax = plt.gca(projection='3d')
 
-                # If this an edge plot, label appropriately.
-                m == 0 and plt.title("x" + str(n), fontsize=10)
-                n == 0 and plt.ylabel("x" + str(m), fontsize=10)
+        # Plot our data-set. Colored red and blue.
+        [ax.scatter(p.x[0], p.x[1], p.x[2], c=("r" if p.ell == -1 else "b")) for p in d]
 
-                # We are comparing against the same dimension. Display a histogram instead.
-                if m == n:
-                    plt.hist([a.x[m] for a in d])
+        # Plot the plane derived from the weights.
+        xx, yy = np.meshgrid(np.arange(-scale, scale, scale / 30),
+                             np.arange(-scale, scale, scale / 30))
+        w_zz = -w[1] / w[3] * xx + -w[2] / w[3] * yy - w[0] / w[3]
+        w_plane = ax.plot_surface(xx, yy, w_zz, color='m', alpha='0.1')
 
-                else:
-                    # Otherwise, we set dimension 1 and 2 of this plot as m and n here.
-                    # d_mn = [Point([a.x[m], a.x[n]], a.ell) for a in d]
-                    d_mn = [Point([0, 0], -1)]
+        # Circle the focus point if defined.
+        if focus is not None:
+            ax.scatter(focus.x[0], focus.x[1], focus.x[2], s=80, facecolors='none', edgecolors='m')
 
-                    # Keep our bias. Represent the weights with respect to m and n.
-                    w_mn = [w[0], w[m + 1], w[n + 1]]
-                    w_star_mn = [w_star[0], w_star[m + 1], w_star[n + 1]]
+        # If defined, plot the decision boundary.
+        if w_star is not None:
+            w_star_zz = -w_star[1] / w_star[3] * xx + -w_star[2] / w_star[3] * yy - w_star[0] / \
+                                                                                    w_star[3]
+            ax.plot_surface(xx, yy, w_star_zz, color='k', alpha='0.1')
 
-                    # Given a focus, define one with respect to m and n.
-                    focus_mn = None if focus is None else Point([focus.x[m], focus.x[n]])
-
-                    Visualize.plot_2d(d_mn, w_mn, w_star_mn, focus_mn, scale, False, False, 0.0,
-                                      flash_w)
-
-        # This is probably going to be tight!
-        plt.tight_layout()
+        # We flash the plane red, blue, and magenta if specified.
+        for f in range(flash_w):
+            plot_and_pause = lambda c: w_plane.set_color(c) and plt.pause(0.1)
+            [plot_and_pause(a) for a in ["red", "blue", "magenta"]]
 
         # Dynamic mode must be toggled off to call show.
         show and not dynamic and plt.show()
 
         # Dynamic mode must be on, show must be off to pause.
         not show and dynamic and plt.pause(pause)
+
+        return 0

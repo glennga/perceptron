@@ -6,6 +6,7 @@ Description: This file contains an n-D training data generation class. This gene
 """""
 
 from matplotlib import pyplot as plt
+from datetime import datetime
 from point import Point
 import numpy as np
 
@@ -24,8 +25,11 @@ class Benchmark(object):
         :return: Random list of points that meet the given criteria, as well as w_star used to 
                  classify the points.
         """
-        # Generate our decision boundary (w_star). Scale appropriately.
-        w_star = ((2 * np.random.rand(i + 1)) - 1) * scale
+        # Seed our RNG with time.
+        np.random.seed(datetime.now().toordinal())
+
+        # Generate our decision boundary (w_star). Scale appropriately. We set our bias to **0**.
+        w_star = np.append([0], ((2 * np.random.rand(i)) - 1) * scale)
 
         # Generate our random points. Gamma condition must be met for each point added.
         d = []

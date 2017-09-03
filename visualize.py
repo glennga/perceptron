@@ -8,6 +8,7 @@ Description: This file contains a set of methods (wrapped in a Visualize class) 
 import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
+from mpl_toolkits.mplot3d import axes3d
 from pandas.plotting import parallel_coordinates
 
 

@@ -33,11 +33,11 @@ I initially wanted to produce a matrix of plots comparing every pair of dimensio
 ### 2-dimensional Data, Classification Line
 **N** = 30, **C** = 0.001, **gamma** = 0.01, **scale** = 1
 
-![2d-converged](images/2d-converged.png)
+![2d-converged](images/2d-not-converged.png)
 
 _The black dotted line represents our decision boundary line. The magenta line represents the current line formed by our weight vector (from perceptron). Note that our perceptron has not yet converged._
 
-![2d-not-converged](images/2d-not-converged.png)
+![2d-not-converged](images/2d-converged.png)
 
 _Our perceptron has now converged!_
 

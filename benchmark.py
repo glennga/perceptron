@@ -5,10 +5,11 @@ Description: This file contains an n-D training data generation class. This gene
              points matching specified criteria.
 """""
 
-from matplotlib import pyplot as plt
 from datetime import datetime
-from point import Point
+
 import numpy as np
+
+from point import Point
 
 
 class Benchmark(object):

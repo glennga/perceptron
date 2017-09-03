@@ -32,27 +32,33 @@ I initially wanted to produce a matrix of plots comparing every pair of dimensio
 
 ### 2-dimensional Data, Classification Line
 **N** = 30, **C** = 0.001, **gamma** = 0.01, **scale** = 1
+
 ![2d-converged](images/2d-converged.png)
+
 _The black dotted line represents our decision boundary line. The magenta line represents the current line formed by our weight vector (from perceptron). Note that our perceptron has not yet converged._
 
 ![2d-not-converged](images/2d-not-converged.png)
+
 _Our perceptron has now converged!_
 
 ### 3-dimensional Data, Classification Plane
 **N** = 30, **C** = 0.01, **gamma** = 0.01, **scale** = 1
+
 ![3d-converged](images/3d-not-converged.png)
+
 _The black plane represents our decision boundary plane. The magenta line represents the current plane formed by our weight vector (from perceptron). Note that our perceptron has not yet converged._
 
 ![3d-converged](images/3d-converged.png)
+
 _Our perceptron has now converged!_
 
 ### n-dimensional Data, Classification n-1 Hyperplane
 **N** = 1000, **C** = 0.001, **gamma** = 0.001, **scale** = 1
+
 ![10d-converged](images/10d-not-converged.png)
+
 _The black line represents our decision boundary coefficients (solving for highest dimension). The magenta line represents our current boundary coefficients (from perceptron). Note that our perceptron has not yet converged._
 
 ![10d-converged](images/10d-converged.png)
+
 _Our perceptron has now converged!_
-
-
-Implementation, visualization, and testing of a perceptron.

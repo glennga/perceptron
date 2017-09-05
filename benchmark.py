@@ -26,11 +26,10 @@ class Benchmark(object):
         :return: Random list of points that meet the given criteria, as well as w_star used to 
                  classify the points.
         """
-        # Seed our RNG with time.
-        np.random.seed(datetime.now().toordinal())
 
-        # Generate our decision boundary (w_star). Scale appropriately. We set our bias to **0**.
-        w_star = np.append([0], ((2 * np.random.rand(i)) - 1) * scale)
+        # Generate our decision boundary (w_star). Scale appropriately.
+        # w_star = np.append([0], ((2 * np.random.rand(i)) - 1) * scale)
+        w_star = ((2 * np.random.rand(i+1)) - 1) * scale
 
         # Generate our random points. Gamma condition must be met for each point added.
         d = []

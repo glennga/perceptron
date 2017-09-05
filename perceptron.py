@@ -29,9 +29,6 @@ def perceptron(c, n, gamma, i, scale=1, plot=Visualize.plot_parallel, epoch_plot
     :param pause: Seconds to pause between epochs or points (dependent on epoch_plot).
     :return: The training data set, the decision boundary weights, and the final weights.
     """
-    # Seed our RNG with time. Ensure that the seed is different from that used in Benchmark.
-    np.random.seed(datetime.now().toordinal() + 1)
-
     # Generate the training data.
     d, w_star = Benchmark.generate(n, gamma, i, scale=scale)
 

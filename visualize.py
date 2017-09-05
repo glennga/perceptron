@@ -9,6 +9,7 @@ import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
 from mpl_toolkits.mplot3d import axes3d
+from matplotlib import cm
 from pandas.plotting import parallel_coordinates
 
 
@@ -100,8 +101,8 @@ class Visualize(object):
             :return: None.
             """
             # Label and title the plot.
-            plt.xlabel('Dimension (x_0 represents bias)')
-            plt.title('Decision Boundary vs. Current Weight Vector')
+            plt.xlabel('Coefficient for X term')
+            plt.title('Decision Boundary (black) and Current Weight Vector (blue)')
 
             # Prepare weight-vectors as a data-frame. Find the X coefficients of the equation:
             # x_m = (x_0 + x_1 * w_1 + x_2 * w_2 + ...) / w_m
@@ -182,7 +183,7 @@ class Visualize(object):
         xx, yy = np.meshgrid(np.arange(-scale, scale, scale / 30),
                              np.arange(-scale, scale, scale / 30))
         w_zz = -w[1] / w[3] * xx + -w[2] / w[3] * yy - w[0] / w[3]
-        w_plane = ax.plot_surface(xx, yy, w_zz, color='m', alpha='0.1')
+        w_plane = ax.plot_surface(xx, yy, w_zz, cmap=cm.seismic, alpha=0.6)
 
         # Circle the focus point if defined.
         if focus is not None:
@@ -192,12 +193,12 @@ class Visualize(object):
         if w_star is not None:
             w_star_zz = -w_star[1] / w_star[3] * xx + -w_star[2] / w_star[3] * yy - w_star[0] / \
                                                                                     w_star[3]
-            ax.plot_surface(xx, yy, w_star_zz, color='k', alpha='0.1')
+            ax.plot_surface(xx, yy, w_star_zz, cmap=cm.binary, alpha=0.6)
 
         # We flash the plane red, blue, and magenta if specified.
         for f in range(flash_w):
-            plot_and_pause = lambda c: w_plane.set_color(c) and plt.pause(0.1)
-            [plot_and_pause(a) for a in ["red", "blue", "magenta"]]
+            plot_and_pause = lambda c: w_plane.set_cmap(c) or plt.pause(0.1)
+            [plot_and_pause(a) for a in ["bwr", "seismic"]]
 
         # Dynamic mode must be toggled off to call show.
         show and not dynamic and plt.show()
